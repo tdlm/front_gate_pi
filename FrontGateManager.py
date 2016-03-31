@@ -9,22 +9,24 @@ class Sonos:
         apiHost = '127.0.0.1'
 
         def say(self, room, str, lang = 'en-us'):
-                path = 'http://{host}:{port}/{room}/say/{str}/{lang}'.format(
+                path = 'http://{host}:{port}/{room}/say/{str}/{lang}/{volume}'.format(
 									host = self.apiHost,
 									port = self.apiPort,
 									room = urllib2.quote(room),
 									str = urllib2.quote(str),
-									lang = lang
+									lang = lang,
+									volume = 50
 								)
 		print path
                 self.__sonosRequest(path)
 
         def sayAll(self, str, lang = 'en-us'):
-                path = 'http://{host}:{port}/sayall/{str}/{lang}'.format(
+                path = 'http://{host}:{port}/sayall/{str}/{lang}/{volume}'.format(
 									host = self.apiHost,
 									port = self.apiPort,
 									str = urllib2.quote(str),
-									lang = lang
+									lang = lang,
+									volume = 50
 								)
 		print path
                 self.__sonosRequest(path)
@@ -55,9 +57,27 @@ class FrontGateState:
 		if self.open != self.lastState:
 			if self.open:
 				FrontGateManager.sonos.sayAll('The gate is now open')
+				self.play_random_sound()
 			else:
 				FrontGateManager.sonos.sayAll('The gate is now closed')
 			self.lastState = self.open
+
+	def play_random_sound(self):
+		sounds = [
+			'./sounds/mp3/whittier.mp3',
+			'./sounds/mp3/arpeggio.mp3',
+			'./sounds/mp3/st_michaels.mp3',
+			'./sounds/mp3/beethovens_fifth.mp3'
+		]
+		
+		import random
+		import os
+
+		sound = random.choice(sounds)
+		print "Playing random sound: {sound}".format(sound = sound)
+		os.system('mpg123 {sound}'.format(sound = sound))
+		
+		
 
 class SkyBell:
 	pressed = False
