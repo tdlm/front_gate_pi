@@ -17,7 +17,6 @@ class Sonos:
 									lang = lang,
 									volume = 50
 								)
-		print path
                 self.__sonosRequest(path)
 
         def sayAll(self, str, lang = 'en-us'):
@@ -28,7 +27,6 @@ class Sonos:
 									lang = lang,
 									volume = 50
 								)
-		print path
                 self.__sonosRequest(path)
 
         def __sonosRequest(self, url):
@@ -74,7 +72,6 @@ class FrontGateState:
 		import os
 
 		sound = random.choice(sounds)
-		print "Playing random sound: {sound}".format(sound = sound)
 		os.system('mpg123 {sound}'.format(sound = sound))
 		
 		
