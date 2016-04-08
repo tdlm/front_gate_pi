@@ -1,5 +1,6 @@
 #!/usr/bin/python
-
+import sys
+import os
 import urllib2
 import RPi.GPIO as GPIO
 from time import sleep
@@ -35,6 +36,13 @@ class Sonos:
                         urllib2.urlopen(req)
                 except urllib2.URLError as e:
                         print e.reason
+
+class SonosLogger(Sonos):
+	def say(self, room, str, lang = 'en-us'):
+		print "Say :: Room: %s, Str: %s, Lang: %s" % (room, str, lang)
+
+	def sayAll(self, str, lang = 'en-us'):
+		print "SayAll :: Str: %s, Lang: %s" % (str, lang)
 
 
 class FrontGateState:
@@ -99,7 +107,11 @@ class SkyBell:
 class FrontGateManager:
 	sonos = Sonos()
 
-	def init(self):
+	def init(self, output = 'sonos'):
+		
+		if output == 'mute':
+			sonos = SonosLogger()
+
 		self.frontGateState = FrontGateState(22)
 		self.skyBell = SkyBell(17)
 
@@ -114,4 +126,5 @@ class FrontGateManager:
 
 if __name__ == "__main__":
 	frontGateManager = FrontGateManager()
-	frontGateManager.init()	
+	frontGateManager.init(sys.argv[1])
+
