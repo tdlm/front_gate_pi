@@ -64,8 +64,10 @@ class FrontGateState:
 			if self.open:
 				FrontGateManager.sonos.sayAll('The gate is now open')
 				self.play_random_sound()
+				self.push("The gate is now open")
 			else:
 				FrontGateManager.sonos.sayAll('The gate is now closed')
+				self.push("The gate is now closed")
 			self.lastState = self.open
 
 	def play_random_sound(self):
@@ -82,7 +84,8 @@ class FrontGateState:
 		sound = random.choice(sounds)
 		os.system('mpg123 {sound}'.format(sound = sound))
 		
-		
+        def push(self, message):
+                os.system('prowl "Front Gate Pi" "2" "Gate Open/Close" "{message}"'.format(message = message))		
 
 class SkyBell:
 	pressed = False
@@ -103,6 +106,9 @@ class SkyBell:
 			if self.pressed:
 				FrontGateManager.sonos.sayAll('There is someone at the door')
 		self.lastState = self.pressed
+
+	def push(self, message):
+		os.system('prowl "Front Gate Pi" "2" "Gate Door Bell" "{message}"')
 
 class FrontGateManager:
 	sonos = Sonos()
